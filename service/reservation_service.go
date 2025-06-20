@@ -10,6 +10,7 @@ import (
 type ReservationService interface {
 	CreateReservation(req dto.CreateReservationRequest) (string, error)
 	GetReservationsByDate(date string) ([]model.Reservation, error)
+	GetReservationsByDateRange(startDate, endDate string) ([]model.Reservation, error) // ✅ baru
 }
 
 type reservationService struct {
@@ -35,4 +36,8 @@ func (s *reservationService) CreateReservation(req dto.CreateReservationRequest)
 
 func (s *reservationService) GetReservationsByDate(date string) ([]model.Reservation, error) {
 	return s.repo.FindByDate(date)
+}
+
+func (s *reservationService) GetReservationsByDateRange(startDate, endDate string) ([]model.Reservation, error) {
+	return s.repo.FindByDateRange(startDate, endDate)
 }

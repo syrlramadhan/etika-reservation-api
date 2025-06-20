@@ -67,3 +67,27 @@ func (c *ReservationController) GetReservationsByDate(w http.ResponseWriter, r *
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(reservations)
 }
+
+func (c *ReservationController) GetReservationsByDateRange(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
+		return
+	}
+
+	startDate := r.URL.Query().Get("start")
+	endDate := r.URL.Query().Get("end")
+
+	if startDate == "" || endDate == "" {
+		http.Error(w, "Start and end dates are required", http.StatusBadRequest)
+		return
+	}
+
+	reservations, err := c.service.GetReservationsByDateRange(startDate, endDate)
+	if err != nil {
+		http.Error(w, "Failed to fetch data", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(reservations)
+}
