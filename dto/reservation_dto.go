@@ -1,14 +1,13 @@
 package dto
 
 type CreateReservationRequest struct {
-	ReservedDate string `json:"reserved_date"`
-	CustomerName string `json:"customer_name"`
-	PhoneNumber  string `json:"phone_number"`
-	Email        string `json:"email"`
-	Notes        string `json:"notes"`
+    ReservedDate string `json:"reserved_date"`
+    EventName    string `json:"event_name"`
+    Participants int    `json:"participants"`
+    ImageURL     string `json:"image_url"`
 }
 
 type LoginRequest struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
+    Username string `json:"username"`
+    Password string `json:"password"`
 }
