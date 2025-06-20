@@ -7,3 +7,8 @@ type CreateReservationRequest struct {
 	Email        string `json:"email"`
 	Notes        string `json:"notes"`
 }
+
+type LoginRequest struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}

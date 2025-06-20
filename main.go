@@ -36,6 +36,7 @@ func main() {
 	http.HandleFunc("/api/reservations", withCORS(ctrl.CreateReservation))
 	http.HandleFunc("/api/reservations/by-date", withCORS(ctrl.GetReservationsByDate))
 	http.HandleFunc("/api/reservations/range", withCORS(ctrl.GetReservationsByDateRange))
+	http.HandleFunc("/api/login", withCORS(ctrl.Login))
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

@@ -4,7 +4,10 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"time"
 
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/syrlramadhan/etika-reservation-api/config"
 	"github.com/syrlramadhan/etika-reservation-api/dto"
 	"github.com/syrlramadhan/etika-reservation-api/service"
 )
@@ -90,4 +93,45 @@ func (c *ReservationController) GetReservationsByDateRange(w http.ResponseWriter
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(reservations)
+}
+
+func (c *ReservationController) Login(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var req dto.LoginRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	// Dummy user check
+	if req.Username != "admin" || req.Password != "admin123" {
+		http.Error(w, "Invalid username or password", http.StatusUnauthorized)
+		return
+	}
+
+	// JWT Payload
+	claims := jwt.MapClaims{
+		"username": req.Username,
+		"exp":      time.Now().Add(24 * time.Hour).Unix(), // expired in 1 day
+		"iat":      time.Now().Unix(),
+	}
+
+	// Create token
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	signedToken, err := token.SignedString(config.JwtSecret)
+	if err != nil {
+		http.Error(w, "Failed to generate token", http.StatusInternalServerError)
+		return
+	}
+
+	resp := map[string]string{
+		"message": "Login successful",
+		"token":   signedToken,
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(resp)
 }
