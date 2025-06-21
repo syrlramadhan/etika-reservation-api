@@ -174,7 +174,7 @@ func (c *ReservationController) Login(w http.ResponseWriter, r *http.Request) {
     }
 
     // Dummy user check
-    if req.Username != "admin" || req.Password != "admin123" {
+    if req.Username != "etika" || req.Password != "etika123" {
         http.Error(w, "Invalid username or password", http.StatusUnauthorized)
         return
     }
