@@ -21,16 +21,16 @@ func NewReservationRepository(db *sql.DB) ReservationRepository {
 
 func (r *reservationRepository) Save(res model.Reservation) error {
     _, err := r.db.Exec(
-        `INSERT INTO reservations (id, reserved_date, event_name, participants, image_url)
-        VALUES (?, ?, ?, ?, ?)`,
-        res.ID, res.ReservedDate, res.EventName, res.Participants, res.ImageURL,
+        `INSERT INTO reservations (id, reserved_date, event_name, image_url)
+        VALUES (?, ?, ?, ?)`,
+        res.ID, res.ReservedDate, res.EventName, res.ImageURL,
     )
     return err
 }
 
 func (r *reservationRepository) FindByDate(date string) ([]model.Reservation, error) {
     rows, err := r.db.Query(
-        `SELECT id, reserved_date, event_name, participants, image_url, created_at 
+        `SELECT id, reserved_date, event_name, image_url, created_at 
         FROM reservations WHERE reserved_date = ?`, date)
     if err != nil {
         return nil, err
@@ -40,7 +40,7 @@ func (r *reservationRepository) FindByDate(date string) ([]model.Reservation, er
     var reservations []model.Reservation
     for rows.Next() {
         var res model.Reservation
-        if err := rows.Scan(&res.ID, &res.ReservedDate, &res.EventName, &res.Participants, 
+        if err := rows.Scan(&res.ID, &res.ReservedDate, &res.EventName, 
                            &res.ImageURL, &res.CreatedAt); err != nil {
             return nil, err
         }
@@ -51,7 +51,7 @@ func (r *reservationRepository) FindByDate(date string) ([]model.Reservation, er
 
 func (r *reservationRepository) FindByDateRange(startDate, endDate string) ([]model.Reservation, error) {
     rows, err := r.db.Query(
-        `SELECT id, reserved_date, event_name, participants, image_url, created_at 
+        `SELECT id, reserved_date, event_name, image_url, created_at 
         FROM reservations 
         WHERE reserved_date BETWEEN ? AND ?`,
         startDate, endDate,
@@ -64,7 +64,7 @@ func (r *reservationRepository) FindByDateRange(startDate, endDate string) ([]mo
     var reservations []model.Reservation
     for rows.Next() {
         var res model.Reservation
-        if err := rows.Scan(&res.ID, &res.ReservedDate, &res.EventName, &res.Participants, 
+        if err := rows.Scan(&res.ID, &res.ReservedDate, &res.EventName, 
                            &res.ImageURL, &res.CreatedAt); err != nil {
             return nil, err
         }

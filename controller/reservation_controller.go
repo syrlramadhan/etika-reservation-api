@@ -7,7 +7,6 @@ import (
     "net/http"
     "os"
     "path/filepath"
-    "strconv"
     "strings"
     "time"
 
@@ -74,17 +73,9 @@ func (c *ReservationController) CreateReservation(w http.ResponseWriter, r *http
     // Ambil data dari form
     reservedDate := r.FormValue("reserved_date")
     eventName := r.FormValue("event_name")
-    participantsStr := r.FormValue("participants")
-
-    // Konversi participants ke integer
-    participants, err := strconv.Atoi(participantsStr)
-    if err != nil {
-        http.Error(w, "Invalid participants value", http.StatusBadRequest)
-        return
-    }
 
     // Validasi input
-    if reservedDate == "" || eventName == "" || participants <= 0 {
+    if reservedDate == "" || eventName == "" {
         http.Error(w, "Missing or invalid required fields", http.StatusBadRequest)
         return
     }
@@ -109,7 +100,6 @@ func (c *ReservationController) CreateReservation(w http.ResponseWriter, r *http
     req := dto.CreateReservationRequest{
         ReservedDate: reservedDate,
         EventName:    eventName,
-        Participants: participants,
         ImageURL:     imageURL,
     }
 

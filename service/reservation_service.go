@@ -27,7 +27,6 @@ func (s *reservationService) CreateReservation(req dto.CreateReservationRequest)
         ID:           id,
         ReservedDate: req.ReservedDate,
         EventName:    req.EventName,
-        Participants: req.Participants,
         ImageURL:     req.ImageURL,
     }
     return id, s.repo.Save(reservation)
